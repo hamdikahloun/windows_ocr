@@ -1,14 +1,19 @@
 cmake_minimum_required(VERSION 3.15)
 set(PROJECT_NAME "windows_ocr")
 project(${PROJECT_NAME} LANGUAGES CXX)
-
+file(COPY Bin_64
+     DESTINATION ${CMAKE_BINARY_DIR}/runner/Debug)
+file(COPY Bin_common
+     DESTINATION ${CMAKE_BINARY_DIR}/runner/Debug)
 # This value is used when generating builds using this plugin, so it must
 # not be changed
 set(PLUGIN_NAME "windows_ocr_plugin")
+file(GLOB SOURCES "*.cpp")
 
 add_library(${PLUGIN_NAME} SHARED
-  "windows_ocr_plugin.cpp"
+  ${SOURCES}
 )
+
 apply_standard_settings(${PLUGIN_NAME})
 set_target_properties(${PLUGIN_NAME} PROPERTIES
   CXX_VISIBILITY_PRESET hidden)
