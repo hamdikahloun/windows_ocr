@@ -10,4 +10,4 @@ jobs:
         channel: dev
     - run: flutter config --enable-windows-desktop
     - run: flutter pub get
-    - run: flutter build windows
+    - run: cd example && flutter build windows
