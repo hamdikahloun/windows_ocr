@@ -2,35 +2,30 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c6661a31-3d58-4b31-81cf-56e912c6f1a8" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Dart_SDK.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Dart_SDK.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/example/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/main.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/example/pubspec.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/example/pubspec.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/windows/flutter/ephemeral/.plugin_symlinks/windows_ocr/.idea/libraries/Dart_SDK.xml" beforeDir="false" afterPath="$PROJECT_DIR$/example/windows/flutter/ephemeral/.plugin_symlinks/windows_ocr/.idea/libraries/Dart_SDK.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/example/windows/flutter/ephemeral/.plugin_symlinks/windows_ocr/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/example/windows/flutter/ephemeral/.plugin_symlinks/windows_ocr/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/example/windows/flutter/ephemeral/.plugin_symlinks/windows_ocr/example/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/windows/flutter/ephemeral/.plugin_symlinks/windows_ocr/example/lib/main.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/example/windows/flutter/ephemeral/.plugin_symlinks/windows_ocr/example/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/example/windows/flutter/ephemeral/.plugin_symlinks/windows_ocr/example/pubspec.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/example/windows/flutter/ephemeral/.plugin_symlinks/windows_ocr/example/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/example/windows/flutter/ephemeral/.plugin_symlinks/windows_ocr/example/pubspec.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/windows/flutter/ephemeral/.plugin_symlinks/windows_ocr/example/windows/flutter/generated_plugin_registrant.cc" beforeDir="false" afterPath="$PROJECT_DIR$/example/windows/flutter/ephemeral/.plugin_symlinks/windows_ocr/example/windows/flutter/generated_plugin_registrant.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/windows/flutter/ephemeral/.plugin_symlinks/windows_ocr/example/windows/flutter/generated_plugins.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/example/windows/flutter/ephemeral/.plugin_symlinks/windows_ocr/example/windows/flutter/generated_plugins.cmake" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/example/windows/flutter/ephemeral/.plugin_symlinks/windows_ocr/lib/windows_ocr.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/windows/flutter/ephemeral/.plugin_symlinks/windows_ocr/lib/windows_ocr.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/windows/flutter/ephemeral/.plugin_symlinks/windows_ocr/test/windows_ocr_test.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/windows/flutter/ephemeral/.plugin_symlinks/windows_ocr/test/windows_ocr_test.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/example/windows/flutter/ephemeral/.plugin_symlinks/windows_ocr/windows/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/example/windows/flutter/ephemeral/.plugin_symlinks/windows_ocr/windows/CMakeLists.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/example/windows/flutter/ephemeral/.plugin_symlinks/windows_ocr/windows/windows_ocr_plugin.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/example/windows/flutter/ephemeral/.plugin_symlinks/windows_ocr/windows/windows_ocr_plugin.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/windows/flutter/ephemeral/.plugin_symlinks/windows_ocr/windows_ocr.iml" beforeDir="false" afterPath="$PROJECT_DIR$/example/windows/flutter/ephemeral/.plugin_symlinks/windows_ocr/windows_ocr.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/windows/flutter/generated_plugin_registrant.cc" beforeDir="false" afterPath="$PROJECT_DIR$/example/windows/flutter/generated_plugin_registrant.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/windows/flutter/generated_plugins.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/example/windows/flutter/generated_plugins.cmake" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/windows_ocr.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/windows_ocr.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/windows_ocr_test.dart" beforeDir="false" afterPath="$PROJECT_DIR$/test/windows_ocr_test.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/windows/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/windows/CMakeLists.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/windows/windows_ocr_plugin.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/windows/windows_ocr_plugin.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/windows_ocr.iml" beforeDir="false" afterPath="$PROJECT_DIR$/windows_ocr.iml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Dart File" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -62,21 +57,21 @@
     <servers />
   </component>
   <component name="WindowStateProjectService">
-    <state width="1306" height="176" key="GridCell.Tab.0.bottom" timestamp="1609261670350">
+    <state width="1323" height="178" key="GridCell.Tab.0.bottom" timestamp="1609346433501">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1306" height="176" key="GridCell.Tab.0.bottom/0.0.1366.728@0.0.1366.728" timestamp="1609261670350" />
-    <state width="1306" height="176" key="GridCell.Tab.0.center" timestamp="1609261670350">
+    <state width="1323" height="178" key="GridCell.Tab.0.bottom/0.0.1366.728@0.0.1366.728" timestamp="1609346433501" />
+    <state width="1323" height="178" key="GridCell.Tab.0.center" timestamp="1609346433501">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1306" height="176" key="GridCell.Tab.0.center/0.0.1366.728@0.0.1366.728" timestamp="1609261670350" />
-    <state width="1306" height="176" key="GridCell.Tab.0.left" timestamp="1609261670350">
+    <state width="1323" height="178" key="GridCell.Tab.0.center/0.0.1366.728@0.0.1366.728" timestamp="1609346433501" />
+    <state width="1323" height="178" key="GridCell.Tab.0.left" timestamp="1609346433501">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1306" height="176" key="GridCell.Tab.0.left/0.0.1366.728@0.0.1366.728" timestamp="1609261670350" />
-    <state width="1306" height="176" key="GridCell.Tab.0.right" timestamp="1609261670350">
+    <state width="1323" height="178" key="GridCell.Tab.0.left/0.0.1366.728@0.0.1366.728" timestamp="1609346433501" />
+    <state width="1323" height="178" key="GridCell.Tab.0.right" timestamp="1609346433501">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1306" height="176" key="GridCell.Tab.0.right/0.0.1366.728@0.0.1366.728" timestamp="1609261670350" />
+    <state width="1323" height="178" key="GridCell.Tab.0.right/0.0.1366.728@0.0.1366.728" timestamp="1609346433501" />
   </component>
 </project>

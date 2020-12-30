@@ -5,6 +5,10 @@ file(COPY Bin_64
      DESTINATION ${CMAKE_BINARY_DIR}/runner/Debug)
 file(COPY Bin_common
      DESTINATION ${CMAKE_BINARY_DIR}/runner/Debug)
+file(COPY Bin_64
+     DESTINATION ${CMAKE_BINARY_DIR}/runner/Release)
+file(COPY Bin_common
+     DESTINATION ${CMAKE_BINARY_DIR}/runner/Release)
 # This value is used when generating builds using this plugin, so it must
 # not be changed
 set(PLUGIN_NAME "windows_ocr_plugin")

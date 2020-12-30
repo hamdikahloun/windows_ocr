@@ -24,12 +24,13 @@ class _MyAppState extends State<MyApp> {
       _ocr = '';
     });
     String ocr;
-    // Platform messages may fail, so we use a try/catch PlatformException.
+    // Platform messages may fail, so we use a try/catch.
     try {
       FileChooserResult result =
           await showOpenPanel(allowsMultipleSelection: false);
       if (!result.canceled) {
-        ocr = await WindowsOcr.getOcr(result.paths[0]);
+        ocr = await WindowsOcr.getMrz(result.paths[0]);
+        debugPrint(ocr.split('\n').length.toString());
       } else {
         ocr = 'File selector canceled';
       }
