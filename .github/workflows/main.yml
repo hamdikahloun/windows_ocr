@@ -7,7 +7,7 @@ jobs:
     - uses: actions/checkout@v2
     - uses: subosito/flutter-action@v1
       with:
-        channel: deb
+        channel: dev
     - run: flutter config --enable-windows-desktop
     - run: flutter pub get
     - run: flutter test
