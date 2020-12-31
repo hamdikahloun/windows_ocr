@@ -1,16 +1,11 @@
 class Barcode {
-  String value = "";
-  int type = -1;
+  String value;
+  String type;
 
-  Barcode.fromJson(Map<String, dynamic> json) {
-    value = json['value'];
-    type = json['type'];
-  }
+  Barcode({this.value, this.type});
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['value'] = this.value;
-    data['type'] = this.type;
-    return data;
+  Barcode.fromData(dynamic data) {
+    this.value = data['value'];
+    this.type = data['type'];
   }
 }

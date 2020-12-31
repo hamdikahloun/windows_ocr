@@ -3,18 +3,14 @@
 // This must be included before many other Windows headers.
 #include <windows.h>
 #include "NSOCR.h"
-// For getPlatformVersion; remove unless needed for your plugin implementation.
-#include <VersionHelpers.h>
-
 #include <flutter/method_channel.h>
 #include <flutter/plugin_registrar_windows.h>
 #include <flutter/standard_method_codec.h>
 
-#include <iostream>
 #include <string>
 #include <map>
 #include <memory>
-#include <sstream>
+
 using namespace std;
 namespace {
 
@@ -101,16 +97,16 @@ namespace {
 		txt = (wchar_t*)malloc(2 * n); //allocate memory for text
 		NsOCR->Img_GetImgText(ImgObj, txt, n, FMT_EXACTCOPY); //get text
 		NsOCR->Engine_Uninitialize(); //release all created objects and uninitialize OCR engine
-		
+
 		std::string s = wchar2string(txt);
 		free(txt); //free memory
 		wcout << s.c_str() << endl;
 		return s;
 	}
 
-	std::string getMrz(std::string file) {
-		int CfgObj, OcrObj, ImgObj, SvrObj, res, n;
-		wchar_t* txt;
+
+	std::string getMrz(std::string file, std::string fileMrz) {
+		int CfgObj, OcrObj, ImgObj, SvrObj, res;
 		TNSOCR* NsOCR;
 		NsOCR = new TNSOCR(L"Bin_64/NSOCR.dll");
 		if (!NsOCR->IsDllLoaded()) {
@@ -123,7 +119,6 @@ namespace {
 		wchar_t* path = new wchar_t[file.length() + 1];
 		std::copy(file.begin(), file.end(), path);
 		path[file.length()] = 0;
-		wcout << path << endl;
 		res = NsOCR->Img_LoadFile(ImgObj, path); //load some image for OCR
 		if (res > ERROR_FIRST) {
 			wcout << "Img_LoadFile Erro" << endl;
@@ -141,35 +136,29 @@ namespace {
 			wcout << "Svr_AddPage Erro" << endl;
 			return "";
 		};
-		//res = NsOCR->Svr_SaveToFile(SvrObj, L"D:\\out.xml"); //save OCRed image to XML file
-		char* buffer = NULL;
-		int bSize = NsOCR->Svr_SaveToMemory(SvrObj, buffer, 0);
-		buffer = (char*)malloc(bSize);
-		res = NsOCR->Svr_SaveToMemory(SvrObj, buffer, bSize); //save OCRed image to memory
+		wchar_t* pathMrz = new wchar_t[fileMrz.length() + 1];
+		std::copy(fileMrz.begin(), fileMrz.end(), pathMrz);
+		path[fileMrz.length()] = 0;
+		wcout << pathMrz << endl;
+		res = NsOCR->Svr_SaveToFile(SvrObj, pathMrz); //save OCRed image to XML file
 		
 		if (res > ERROR_FIRST) {
-			wcout << "Svr_SaveToMemory Erro" << endl;
+			wcout << "Svr_SaveToFile Erro" << endl;
 			return "";
 		};
-		n = NsOCR->Svr_GetText(SvrObj, -1, NULL, 0) + 1;
-		txt = (wchar_t*)malloc(2 * n);
-		res = NsOCR->Svr_GetText(SvrObj, -1, txt, n);
-		
-		std::string s = wchar2string(txt);
-		wcout << s.c_str() << endl;
-		free(txt); //free memory
-		free(buffer);
+
 		NsOCR->Engine_Uninitialize(); //release all created objects and uninitialize OCR engine
-		return s;
+		
+		return "";
 	}
 
-	std::string getBarcode(std::string file) {
+	flutter::EncodableList getBarcode(std::string file) {
 		TNSOCR* NsOCR;
-		std::string s = "";
+		auto pl = flutter::EncodableList{};
 		NsOCR = new TNSOCR(L"Bin_64/NSOCR.dll");
 		if (!NsOCR->IsDllLoaded()) {
 			wcout << "DLL not LOADED" << endl;
-			return "";
+			return pl;
 		}
 		NsOCR->Engine_SetLicenseKey(L"AB2A4DD5FF2A"); //required for licensed version only
 		int CfgObj, OcrObj, ImgObj, res, cnt, i, n, Xpos, Ypos, Width, Height;
@@ -183,34 +172,79 @@ namespace {
 		res = NsOCR->Img_LoadFile(ImgObj, wide_string); //load some image for OCR
 		if (res > ERROR_FIRST) {
 			wcout << "Img_LoadFile Error" << endl;
-			return "";
+			return pl;
 		};
 		res = NsOCR->Img_OCR(ImgObj, OCRSTEP_FIRST, OCRSTEP_LAST, OCRFLAG_NONE); //perform OCR 
 		if (res > ERROR_FIRST) {
 			wcout << "Img_OCR Error" << endl;
-			return "";
+			return pl;
 		};
 		cnt = NsOCR->Blk_GetBarcodeCnt(ImgObj); //get number of barcodes of entire image
-		wcout << cnt << endl;
+
 		for (i = 0; i < cnt; i++)
 		{
 			NsOCR->Blk_GetBarcodeRect(ImgObj, i, &Xpos, &Ypos, &Width, &Height); //get barcode position and size
 			res = NsOCR->Blk_GetBarcodeType(ImgObj, i); //get barcode type
-			
+
 			n = NsOCR->Blk_GetBarcodeText(ImgObj, i, NULL, 0) + 1; //get buffer size plus terminating NULL character
 			txt = (wchar_t*)malloc(sizeof(wchar_t) * n); //allocate memory for text
 			NsOCR->Blk_GetBarcodeText(ImgObj, i, txt, n); //get barcode text
-			wcout << res << endl;
-			if (s == "") {
-				s.append(wchar2string(txt));
+
+			auto mp = flutter::EncodableMap{};
+			mp[flutter::EncodableValue("value")] =
+				flutter::EncodableValue(wchar2string(txt));
+
+			switch (res) {
+			case BARCODE_TYPE_EAN8:
+				mp[flutter::EncodableValue("type")] =
+					flutter::EncodableValue("EAN8");
+				break;
+			case BARCODE_TYPE_UPCE:
+				mp[flutter::EncodableValue("type")] =
+					flutter::EncodableValue("UPCE");
+				break;
+			case BARCODE_TYPE_ISBN10:
+				mp[flutter::EncodableValue("type")] =
+					flutter::EncodableValue("ISBN10");
+				break;
+			case BARCODE_TYPE_UPCA:
+				mp[flutter::EncodableValue("type")] =
+					flutter::EncodableValue("UPCA");
+				break;
+			case BARCODE_TYPE_EAN13:
+				mp[flutter::EncodableValue("type")] =
+					flutter::EncodableValue("EAN13");
+				break;
+			case BARCODE_TYPE_ISBN13:
+				mp[flutter::EncodableValue("type")] =
+					flutter::EncodableValue("ISBN13");
+				break;
+			case BARCODE_TYPE_ZBAR_I25:
+				mp[flutter::EncodableValue("type")] =
+					flutter::EncodableValue("ZBAR_I25");
+				break;
+			case BARCODE_TYPE_CODE39:
+				mp[flutter::EncodableValue("type")] =
+					flutter::EncodableValue("CODE39");
+				break;
+			case BARCODE_TYPE_QRCODE:
+				mp[flutter::EncodableValue("type")] =
+					flutter::EncodableValue("QRCODE");
+				break;
+			case BARCODE_TYPE_CODE128:
+				mp[flutter::EncodableValue("type")] =
+					flutter::EncodableValue("CODE128");
+				break;
+			default:
+				mp[flutter::EncodableValue("type")] =
+					flutter::EncodableValue("");
 			}
-			else {
-				s.append(",").append(wchar2string(txt));
-			}
+			pl.push_back(mp);
+
 			free(txt); //free memory			
 		}
 		NsOCR->Engine_Uninitialize(); //release all created objects and uninitialize OCR engine
-		return s;
+		return pl;
 	}
 
 	void WindowsOcrPlugin::HandleMethodCall(
@@ -234,13 +268,19 @@ namespace {
 		}
 		else if (method_call.method_name().compare("getMrz") == 0) {
 			std::string file;
+			std::string fileMrz;
 			const auto* arguments = std::get_if<flutter::EncodableMap>(method_call.arguments());
 			auto vl = arguments->find(flutter::EncodableValue("path"));
 			if (vl != arguments->end()) {
 				file = std::get<std::string>(vl->second);
 			}
 
-			result->Success(flutter::EncodableValue(getMrz(file).c_str()));
+			auto vll = arguments->find(flutter::EncodableValue("pathXml"));
+			if (vll != arguments->end()) {
+				fileMrz = std::get<std::string>(vll->second);
+			}
+
+			result->Success(flutter::EncodableValue(getMrz(file , fileMrz).c_str()));
 		}
 		else if (method_call.method_name().compare("getBarcode") == 0) {
 			std::string file;
@@ -250,7 +290,7 @@ namespace {
 				file = std::get<std::string>(vl->second);
 			}
 
-			result->Success(flutter::EncodableValue(getBarcode(file).c_str()));
+			result->Success(getBarcode(file));
 		}
 		else {
 			result->NotImplemented();
