@@ -2,6 +2,7 @@ import 'package:file_chooser/file_chooser.dart';
 import 'package:flutter/material.dart';
 import 'package:windows_ocr/Barcode.dart';
 import 'package:windows_ocr/Languages.dart';
+import 'package:windows_ocr/Mrz.dart';
 import 'package:windows_ocr/windows_ocr.dart';
 
 void main() {
@@ -188,23 +189,22 @@ class MyMrz extends StatefulWidget {
 }
 
 class _MyMrz extends State<MyMrz> {
-  String _ocr = '';
+  Mrz _mrz;
   bool isLoading = false;
 
   // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> initPlatformState() async {
     setState(() {
       isLoading = true;
-      _ocr = '';
     });
 
-    String ocr = '';
+    Mrz mrz;
     // Platform messages may fail, so we use a try/catch.
     try {
       FileChooserResult result =
           await showOpenPanel(allowsMultipleSelection: false);
       if (!result.canceled) {
-        ocr = await WindowsOcr.getMrz(result.paths[0]);
+        mrz = await WindowsOcr.getMrz(result.paths[0]);
       }
     } catch (error) {
       debugPrint('Error: $error');
@@ -212,7 +212,7 @@ class _MyMrz extends State<MyMrz> {
 
     setState(() {
       isLoading = false;
-      _ocr = ocr;
+      _mrz = mrz;
     });
   }
 
@@ -226,10 +226,20 @@ class _MyMrz extends State<MyMrz> {
         child: Icon(Icons.image),
       ),
       appBar: AppBar(
-        title: const Text('OCR'),
+        title: const Text('MRZ'),
       ),
       body: Center(
-        child: isLoading ? CircularProgressIndicator() : Text('$_ocr'),
+        child: isLoading
+            ? CircularProgressIndicator()
+            : Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(_mrz.lastName),
+                  Text(_mrz.name),
+                  Text(_mrz.docNumber)
+                ],
+              ),
       ),
     );
   }

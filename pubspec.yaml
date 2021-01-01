@@ -12,6 +12,7 @@ dependencies:
   flutter:
     sdk: flutter
   path_provider: ^1.6.24
+  xml: ^4.5.1
 
 dev_dependencies:
   flutter_test:

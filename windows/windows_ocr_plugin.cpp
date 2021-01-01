@@ -1,3 +1,4 @@
+#pragma warning(disable: 4996) 
 #include "include/windows_ocr/windows_ocr_plugin.h"
 
 // This must be included before many other Windows headers.
@@ -10,6 +11,9 @@
 #include <string>
 #include <map>
 #include <memory>
+#include <codecvt>
+#include <fstream>
+#include <sstream>
 
 using namespace std;
 namespace {
@@ -71,11 +75,18 @@ namespace {
 		int CfgObj, OcrObj, ImgObj, res, n;
 		wchar_t* txt;
 		NsOCR->Engine_InitializeAdvanced(&CfgObj, &OcrObj, &ImgObj); //initialize OCR engine, create objects and load configuration
-		wchar_t* lang = new wchar_t[language.length() + 1];
-		std::copy(language.begin(), language.end(), lang);
-		lang[language.length()] = 0;
-		wcout << lang << endl;
-		NsOCR->Cfg_SetOption(CfgObj, BT_DEFAULT, lang, L"1");
+		wchar_t* languageChar = new wchar_t[language.length() + 1];
+		std::copy(language.begin(), language.end(), languageChar);
+		languageChar[language.length()] = 0;
+		if (languageChar) {
+			wcout << languageChar << endl;
+		}
+		else
+		{
+			wcout << "No language provided" << endl;
+		}
+
+		NsOCR->Cfg_SetOption(CfgObj, BT_DEFAULT, languageChar, L"1");
 		wchar_t* wide_string = new wchar_t[file.length() + 1];
 		std::copy(file.begin(), file.end(), wide_string);
 		wide_string[file.length()] = 0;
@@ -139,17 +150,34 @@ namespace {
 		wchar_t* pathMrz = new wchar_t[fileMrz.length() + 1];
 		std::copy(fileMrz.begin(), fileMrz.end(), pathMrz);
 		path[fileMrz.length()] = 0;
-		wcout << pathMrz << endl;
+
 		res = NsOCR->Svr_SaveToFile(SvrObj, pathMrz); //save OCRed image to XML file
-		
+		//int i = NsOCR->Svr_SaveToMemory(SvrObj, NULL,0) + 1; //get buffer size
+		//char* buffer = (char*)malloc(2 * i);
+		//res = NsOCR->Svr_SaveToMemory(SvrObj, buffer , i); //save OCRed image to memory
 		if (res > ERROR_FIRST) {
-			wcout << "Svr_SaveToFile Erro" << endl;
+			wcout << "Svr_SaveToFile Erro" << pathMrz << endl;
 			return "";
 		};
 
+		std::ifstream fin(pathMrz, std::ios::binary);
+		fin.seekg(0, ios::end);
+		size_t size = (size_t)fin.tellg();
+
+		//skip BOM
+		fin.seekg(2, ios::beg);
+		size -= 2;
+
+		std::u16string u16((size / 2) + 1, '\0');
+		fin.read((char*)&u16[0], size);
+
+		std::string utf8 = std::wstring_convert<
+			std::codecvt_utf8_utf16<char16_t>, char16_t>{}.to_bytes(u16);
+		std::wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t> convert;
+
 		NsOCR->Engine_Uninitialize(); //release all created objects and uninitialize OCR engine
-		
-		return "";
+
+		return utf8;
 	}
 
 	flutter::EncodableList getBarcode(std::string file) {
@@ -280,7 +308,7 @@ namespace {
 				fileMrz = std::get<std::string>(vll->second);
 			}
 
-			result->Success(flutter::EncodableValue(getMrz(file , fileMrz).c_str()));
+			result->Success(flutter::EncodableValue(getMrz(file, fileMrz).c_str()));
 		}
 		else if (method_call.method_name().compare("getBarcode") == 0) {
 			std::string file;

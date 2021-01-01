@@ -1,11 +1,11 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:windows_ocr/Mrz.dart';
+import 'package:xml/xml.dart';
 
 import 'Barcode.dart';
 
@@ -20,22 +20,21 @@ class WindowsOcr {
     return res;
   }
 
-  static Future<dynamic> getMrz(String filePath) async {
+  static Future<Mrz> getMrz(String filePath) async {
     Directory tempDir = await getTemporaryDirectory();
     String tempPath = tempDir.path + '\\' + 'out.xml';
-    debugPrint(tempPath);
     final res = await _channel.invokeMethod('getMrz', <String, dynamic>{
       'path': filePath,
       'pathXml': tempPath,
     });
-
-    File file = File(tempPath);
-    if (await file.exists()) {
-      Uint8List uint8list = await file.readAsBytes();
-      String encode = base64.encode(uint8list);
-      debugPrint('$encode');
+    final document = XmlDocument.parse(res);
+    final mrzNodes = document.findAllElements('MRZ').toList();
+    Mrz mrz;
+    if (mrzNodes.length > 0) {
+      XmlElement element = mrzNodes[0];
+      mrz = Mrz.fromData(element);
     }
-    return res;
+    return mrz;
   }
 
   static Future<List<Barcode>> getBarcode(String filePath) async {
@@ -45,6 +44,9 @@ class WindowsOcr {
     });
     debugPrint(res.toString());
     final barcodes = <Barcode>[];
+    if (res == null) {
+      return [];
+    }
     for (final barcode in res) {
       barcodes.add(Barcode.fromData(barcode));
     }
