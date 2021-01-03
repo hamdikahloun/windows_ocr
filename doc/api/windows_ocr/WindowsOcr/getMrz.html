@@ -84,7 +84,7 @@
       <div><h1><span class="kind-method">getMrz</span> method </h1></div>
 
     <section class="multi-line-signature">
-      <span class="returntype"><a href="https://api.flutter.dev/flutter/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>&gt;</span></span>
+      <span class="returntype"><a href="https://api.flutter.dev/flutter/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../../Mrz/Mrz-class.html">Mrz</a></span>&gt;</span></span>
             <span class="name ">getMrz</span>
 (<wbr><ol class="parameter-list"><li><span class="parameter" id="getMrz-param-filePath"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">filePath</span></span></li>
 </ol>)
@@ -93,11 +93,21 @@
     
     <section class="summary source-code" id="source">
       <h2><span>Implementation</span></h2>
-      <pre class="language-dart"><code class="language-dart">static Future&lt;String&gt; getMrz(String filePath) async {
-  final String res = await _channel.invokeMethod(&#39;getMrz&#39;, &lt;String, dynamic&gt;{
+      <pre class="language-dart"><code class="language-dart">static Future&lt;Mrz&gt; getMrz(String filePath) async {
+  Directory tempDir = await getTemporaryDirectory();
+  String tempPath = tempDir.path + &#39;\\&#39; + &#39;out.xml&#39;;
+  final res = await _channel.invokeMethod(&#39;getMrz&#39;, &lt;String, dynamic&gt;{
     &#39;path&#39;: filePath,
+    &#39;pathXml&#39;: tempPath,
   });
-  return res;
+  final document = XmlDocument.parse(res);
+  final mrzNodes = document.findAllElements(&#39;MRZ&#39;).toList();
+  Mrz mrz;
+  if (mrzNodes.length &gt; 0) {
+    XmlElement element = mrzNodes[0];
+    mrz = Mrz.fromData(element);
+  }
+  return mrz;
 }</code></pre>
     </section>
 
