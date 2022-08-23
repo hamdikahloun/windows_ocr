@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:windows_ocr/Languages.dart';
 import 'package:windows_ocr/Mrz.dart';
 import 'package:xml/xml.dart';
 
@@ -12,15 +12,19 @@ import 'Barcode.dart';
 class WindowsOcr {
   static const MethodChannel _channel = const MethodChannel('windows_ocr');
 
-  static Future<String> getOcr(String filePath, {language = "English"}) async {
-    final String res = await _channel.invokeMethod('getOcr', <String, dynamic>{
+  /// Call [getOcr] to get Text from File , also We Can pass optional Language parameter
+  static Future<String?> getOcr(
+    String filePath, {
+    String? language,
+  }) async {
+    final String? res = await _channel.invokeMethod('getOcr', <String, dynamic>{
       'path': filePath,
-      'language': 'Languages/$language',
+      'language': 'Languages/${language ?? Languages.English}',
     });
     return res;
   }
 
-  static Future<Mrz> getMrz(String filePath) async {
+  static Future<Mrz?> getMrz(String filePath) async {
     Directory tempDir = await getTemporaryDirectory();
     String tempPath = tempDir.path + '\\' + 'out.xml';
     final res = await _channel.invokeMethod('getMrz', <String, dynamic>{
@@ -29,7 +33,7 @@ class WindowsOcr {
     });
     final document = XmlDocument.parse(res);
     final mrzNodes = document.findAllElements('MRZ').toList();
-    Mrz mrz;
+    Mrz? mrz;
     if (mrzNodes.length > 0) {
       XmlElement element = mrzNodes[0];
       mrz = Mrz.fromData(element);
@@ -37,7 +41,7 @@ class WindowsOcr {
     return mrz;
   }
 
-  static Future<List<Barcode>> getBarcode(String filePath) async {
+  static Future<List<Barcode>?> getBarcode(String filePath) async {
     final res = await _channel
         .invokeMethod<List<dynamic>>('getBarcode', <String, dynamic>{
       'path': filePath,
