@@ -1,4 +1,4 @@
-import 'package:file_chooser/file_chooser.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:windows_ocr/Barcode.dart';
 import 'package:windows_ocr/Languages.dart';
@@ -83,10 +83,11 @@ class _MyBarcodeState extends State<MyBarcode> {
     List<Barcode> listBarcode = [];
     // Platform messages may fail, so we use a try/catch.
     try {
-      FileChooserResult result =
-          await showOpenPanel(allowsMultipleSelection: false);
-      if (!result.canceled) {
-        listBarcode = await WindowsOcr.getBarcode(result.paths[0]);
+      final result = await FilePicker.platform.pickFiles(allowMultiple: false);
+      if (result != null) {
+        if (result.paths[0] != null) {
+          listBarcode = await WindowsOcr.getBarcode(result.paths[0]!);
+        }
       }
     } catch (error) {
       debugPrint('Error: $error');
@@ -148,11 +149,12 @@ class _MyOcr extends State<MyOcr> {
     String ocr = '';
     // Platform messages may fail, so we use a try/catch.
     try {
-      FileChooserResult result =
-          await showOpenPanel(allowsMultipleSelection: false);
-      if (!result.canceled) {
-        ocr = await WindowsOcr.getOcr(result.paths[0],
-            language: Languages.English);
+      final result = await FilePicker.platform.pickFiles(allowMultiple: false);
+      if (result != null) {
+        if (result.paths[0] != null) {
+          ocr = await WindowsOcr.getOcr(result.paths[0]!,
+              language: Languages.English);
+        }
       }
     } catch (error) {
       debugPrint('Error: $error');
@@ -189,7 +191,7 @@ class MyMrz extends StatefulWidget {
 }
 
 class _MyMrz extends State<MyMrz> {
-  Mrz _mrz;
+  Mrz? _mrz;
   bool isLoading = false;
 
   // Platform messages are asynchronous, so we initialize in an async method.
@@ -198,13 +200,14 @@ class _MyMrz extends State<MyMrz> {
       isLoading = true;
     });
 
-    Mrz mrz;
+    Mrz? mrz;
     // Platform messages may fail, so we use a try/catch.
     try {
-      FileChooserResult result =
-          await showOpenPanel(allowsMultipleSelection: false);
-      if (!result.canceled) {
-        mrz = await WindowsOcr.getMrz(result.paths[0]);
+      final result = await FilePicker.platform.pickFiles(allowMultiple: false);
+      if (result != null) {
+        if (result.paths[0] != null) {
+          mrz = await WindowsOcr.getMrz(result.paths[0]!);
+        }
       }
     } catch (error) {
       debugPrint('Error: $error');
@@ -231,15 +234,17 @@ class _MyMrz extends State<MyMrz> {
       body: Center(
         child: isLoading
             ? CircularProgressIndicator()
-            : Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(_mrz.lastName),
-                  Text(_mrz.name),
-                  Text(_mrz.docNumber)
-                ],
-              ),
+            : _mrz != null
+                ? Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(_mrz!.lastName),
+                      Text(_mrz!.name),
+                      Text(_mrz!.docNumber)
+                    ],
+                  )
+                : SizedBox(),
       ),
     );
   }

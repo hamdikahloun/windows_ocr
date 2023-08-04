@@ -20,7 +20,7 @@ class WindowsOcr {
     return res;
   }
 
-  static Future<Mrz> getMrz(String filePath) async {
+  static Future<Mrz?> getMrz(String filePath) async {
     Directory tempDir = await getTemporaryDirectory();
     String tempPath = tempDir.path + '\\' + 'out.xml';
     final res = await _channel.invokeMethod('getMrz', <String, dynamic>{
@@ -29,7 +29,7 @@ class WindowsOcr {
     });
     final document = XmlDocument.parse(res);
     final mrzNodes = document.findAllElements('MRZ').toList();
-    Mrz mrz;
+    Mrz? mrz;
     if (mrzNodes.length > 0) {
       XmlElement element = mrzNodes[0];
       mrz = Mrz.fromData(element);
